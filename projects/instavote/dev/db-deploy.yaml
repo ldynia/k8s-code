@@ -25,3 +25,23 @@ spec:
         ports:
         - containerPort: 5432
           protocol: TCP
+        volumeMounts:
+          - name: db-data
+            mountPath: /var/lib/postgresql/data
+        env:
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                name: db
+                key: POSTGRES_USER
+          - name: POSTGRES_PASSWD
+            valueFrom:
+              secretKeyRef:
+                name: db
+                key: POSTGRES_PASSWD
+      restartPolicy: Always
+      volumes:
+        - name: db-data
+          hostPath:
+           path: /var/lib/pgdata
+           type: DirectoryOrCreate

@@ -1,16 +1,26 @@
----
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: vote
-  namespace: instavote
   annotations:
     kubernetes.io/ingress.class: traefik
+    #ingress.kubernetes.io/auth-type: "basic"
+    #ingress.kubernetes.io/auth-secret: "mysecret"
 spec:
   rules:
-  - host: vote.example.com
-    http:
-      paths:
-      - backend:
-          serviceName: vote
-          servicePort: 80
+    #- host: example.org
+    - host: vote.example.org
+      http:
+        paths:
+          - path: /
+          #- path: /vote
+            backend:
+              serviceName: vote
+              servicePort: 82
+    - host: results.example.org
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: results
+              servicePort: 81

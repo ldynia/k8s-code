@@ -1,9 +1,16 @@
 apiVersion: apps/v1
-kind: ReplicaSet
+kind: Deployment
 metadata:
   name: vote
 spec:
-  replicas: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 1
+  revisionHistoryLimit: 4
+  paused: false
+  replicas: 3
   minReadySeconds: 20
   selector:
     matchLabels:
@@ -21,6 +28,13 @@ spec:
       containers:
         - name: app
           image: schoolofdevops/vote:v1
+          resources:
+            limits:
+              cpu: "200m"
+              memory: "100Mi"
+            requests:
+              cpu: "100m"
+              memory: "50Mi"
           ports:
             - containerPort: 80
               protocol: TCP
